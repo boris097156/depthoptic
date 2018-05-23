@@ -11,5 +11,6 @@ python depthoptic_main.py\
     --input_height 128\
     --input_width 256\
     --total_epochs 200\
+    --consistency_weight 0.2\
     --train_network disnet\
     --build_network disnet\

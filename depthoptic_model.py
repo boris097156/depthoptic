@@ -238,7 +238,7 @@ class Model(object):
             self.depth2_loss              = self.pyramid_loss(self.pre_depth2_pyramid, self.gt_depth2_pyramid)
             self.depth_loss               = self.depth1_loss + self.depth2_loss
 
-            self.total_loss               = self.depth_loss + self.consistency_loss
+            self.total_loss               = self.depth_loss + FLAGS.optic_weight * self.consistency_loss
 
         self.train_op = tf.train.AdamOptimizer(FLAGS.init_lr).minimize(self.total_loss)
             

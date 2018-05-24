@@ -9,10 +9,10 @@ FLAGS = flags.FLAGS
 
 class Model(object):
     def __init__(self, img1, depth1, img2, depth2, optic, reuse_variables=None):
-        self.input_img1 = img1
-        self.input_img2 = img2
-        self.gt_depth1  = depth1
-        self.gt_depth2  = depth2
+        self.input_img1 = img1/255
+        self.input_img2 = img2/255
+        self.gt_depth1  = depth1/255
+        self.gt_depth2  = depth2/255
         self.raw_gt_optic = optic
         tmp1, tmp2 = tf.split(optic, num_or_size_splits=2, axis=1)               #(-1, 2, height, width)
         tmp1 = tf.reshape(tmp1, (-1, FLAGS.input_height, FLAGS.input_width, 1))
@@ -255,7 +255,7 @@ class Model(object):
             
     def of_to_rgb(self, optic_flow):
         optic_r, optic_g = tf.split(optic_flow, num_or_size_splits=2, axis=3)
-        extra_b = tf.zeros(shape=tf.shape(optic_r), dtype=tf.float32)
+        extra_b = tf.ones(shape=tf.shape(optic_r), dtype=tf.float32)
         return tf.concat([optic_r, optic_g, extra_b], axis=3)
     
     def build_summaries(self):

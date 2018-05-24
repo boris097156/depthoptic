@@ -79,7 +79,7 @@ def train():
             for epoch in range(FLAGS.total_epochs):
                 sess.run(train_init_op)
                 for step in range(steps_per_epoch):
-                    summary, loss, _ = sess.run([model.merge_op, model.total_loss, model.train_op])
+                    summary, loss, _, mymax = sess.run([model.merge_op, model.total_loss, model.train_op, model.max])
                     if (step%int(steps_per_epoch/10)) == 0 and global_step > 0:
                         summary_writer.add_summary(summary, global_step+1)
                         elapsed_time, estimated_time_arrival = record_time(start_time, ((total_steps-global_step)/global_step))

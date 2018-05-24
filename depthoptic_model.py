@@ -19,6 +19,8 @@ class Model(object):
         tmp2 = tf.reshape(tmp2, (-1, FLAGS.input_height, FLAGS.input_width, 1))
         self.gt_optic = tf.concat([tmp1, tmp2], axis=3)                          #(-1, height, width, 2)
         
+        self.max = tf.reduce_max(sefl.gt_depth1)
+
         self.reuse_variables  = reuse_variables
 
         self.build_model()

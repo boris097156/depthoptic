@@ -60,7 +60,7 @@ def train():
         optic = tf.reshape(optic, [-1, 2, FLAGS.input_height, FLAGS.input_width])
         model = Model(img1, depth1, img2, depth2, optic, None)
 
-        print("Training Data: {}".format(train_datasize))
+        print("Training Data: {} img".format(train_datasize*2))
         print("Trainable Parameters: {}".format(count_parameters()))
 
         with tf.Session(config=configure()) as sess:
@@ -72,14 +72,13 @@ def train():
             start_time = time.time()
             saver = tf.train.Saver()
             global_step = 0
-            print("Training image:{}".format(train_datasize))
             print("Using optic weight:{}".format(FLAGS.optic_weight))
             print("Batch size:{}   Step per epoch:{}".format(FLAGS.batch_size, steps_per_epoch))
             print("Total epochs:{}  Total steps:{}".format(FLAGS.total_epochs, total_steps))
             for epoch in range(FLAGS.total_epochs):
                 sess.run(train_init_op)
                 for step in range(steps_per_epoch):
-                    summary, loss, _, mymax = sess.run([model.merge_op, model.total_loss, model.train_op, model.max])
+                    summary, loss, _ = sess.run([model.merge_op, model.total_loss, model.train_op])
                     if (step%int(steps_per_epoch/10)) == 0 and global_step > 0:
                         summary_writer.add_summary(summary, global_step+1)
                         elapsed_time, estimated_time_arrival = record_time(start_time, ((total_steps-global_step)/global_step))

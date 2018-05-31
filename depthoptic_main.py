@@ -105,15 +105,15 @@ def test():
     
     print ('Create model')
     model = Model(img1, depth1, img2, depth2, optic)
+    saver = tf.train.Saver()
+    '''
     train_saver = {}
     for net in [FLAGS.build_network]:
         train_saver[net] = tf.train.Saver(var_list=getattr(model, net + "_vars"))
+    '''
     print ('Create model complete')
     
-    #Session Init
-    config = tf.ConfigProto(allow_soft_placement=True)
-    config.gpu_options.allow_growth = True
-    sess = tf.Session(config=config)
+    sess = tf.Session(config=configure())
 
     sess.run(tf.global_variables_initializer())
     sess.run(tf.local_variables_initializer())
@@ -122,10 +122,14 @@ def test():
     coordinator = tf.train.Coordinator()
     threads     = tf.train.start_queue_runners(sess=sess, coord=coordinator)
     
-    print('Restore weights from {}{}'.format(FLAGS.log_directory, FLAGS.model_name))
+    saved_model_dir = '{}{}'.format(FLAGS.log_directory, FLAGS.model_name)
+    print('Restore weights from {}'.format(saved_model_dir))
+    saver.restore(sess, "{}/depthoptic_multi_originoptic-489706".format(saved_model_dir))
+    '''
     for net in [FLAGS.load_network]:
         print("Load network : " + net)
         train_saver[net].restore(sess, FLAGS.log_directory + '/' + FLAGS.model_name +'/'+ net.upper())
+    '''
     print('Restore weights complete')
     
     depth_gif_seq = []
